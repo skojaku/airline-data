@@ -56,7 +56,7 @@ function parseRange(args) {
 program
     .version('1.0.0')
     .usage('[options]')
-    .option('-y, --year <years>', 'Select years from 1993-2017 (e.g. -y 1995..2000,2010,2015)', parseRange)
+    .option('-y, --year <years>', 'Select years from 1993- (e.g. -y 1995..2000,2010,2015)', parseRange)
     .option('-q, --quarter <quarters>', 'Select quarters from 1-4 (e.g. -q 1,4. Default 1..4)', parseRange)
     .option('-f, --force', 'Force overwrite even if file exist')
     .option('-m, --minimal', 'Download minimal number of data columns')
@@ -83,7 +83,7 @@ if (!program.type) {
     program.type = 'Coupon';
 }
 
-if (_.filter(program.year, year => year >= 1993 && year <= 2017).length !== program.year.length) {
+if (_.filter(program.year, year => year >= 1993).length !== program.year.length) {
     l.error(`Not all years in range: ${program.year}`);
     program.help();
 }
@@ -179,7 +179,7 @@ function fixCsv({year, quarter}) {
         const isCommaLast = header.slice(-2) == ",\n";
         if (isCommaLast) {
             l.info(`Remove last comma in ${filename}...`);
-            const child = shell.exec(`sed -i .bak 's/.$//' ${filename}`, { async: true }, (code, stdout, stderr) => {
+            const child = shell.exec(`sed -i 's/.$//' ${filename}`, { async: true }, (code, stdout, stderr) => {
                 if (code !== 0) {
                     l.error(`Error fixing csv ${code}:`);
                     reject(code);
